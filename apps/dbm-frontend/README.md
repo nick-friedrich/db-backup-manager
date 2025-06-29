@@ -1,6 +1,6 @@
-# Better Auth Test Client
+# Database Backup Manager - Frontend
 
-A Vite + React application for testing the Better Auth backend implementation.
+A modern React-based frontend for the Database Backup Manager, providing an intuitive web interface for managing PostgreSQL backups.
 
 ## Features
 
