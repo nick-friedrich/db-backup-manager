@@ -21,7 +21,19 @@ A modern React-based frontend for the Database Backup Manager, providing an intu
 bun install
 ```
 
-### 2. Start the backend
+### 2. Copy env file
+
+```bash
+cp .env.example .env
+```
+
+### 3. Start the backend
+
+```bash
+bun run dev:auth
+```
+
+### 4. Start the client
 
 ```bash
 # Make sure PostgreSQL is running
@@ -31,14 +43,7 @@ docker-compose up -d
 bun run dev:auth
 ```
 
-### 3. Start the client
-
-```bash
-# In another terminal
-bun run dev:client
-```
-
-### 4. Or run both together
+### 5. Or run both together
 
 ```bash
 # Start both backend and frontend
