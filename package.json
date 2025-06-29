@@ -1,0 +1,38 @@
+{
+  "name": "db-backup-manager",
+  "version": "1.0.0",
+  "description": "A powerful PostgreSQL backup manager with automated scheduling and Docker support",
+  "main": "index.js",
+  "scripts": {
+    "install": "bun install && bun --cwd apps/dbm-backend install && bun --cwd apps/dbm-frontend install && bun --cwd packages/dbschema install",
+    "dev": "concurrently \"bun --cwd apps/dbm-backend run dev\" \"bun --cwd apps/dbm-frontend run dev\"",
+    "dev:backend": "bun --cwd apps/dbm-backend run dev",
+    "dev:frontend": "bun --cwd apps/dbm-frontend run dev",
+    "start": "npm run dev",
+    "migrate": "bun --cwd apps/dbm-backend run drizzle-kit migrate",
+    "lint": "bun --cwd apps/dbm-backend run lint && bun --cwd apps/dbm-frontend run lint",
+    "format": "bun --cwd apps/dbm-backend run format && bun --cwd apps/dbm-frontend run format"
+  },
+  "keywords": [
+    "postgresql",
+    "backup", 
+    "database",
+    "scheduler",
+    "docker",
+    "pg_dump",
+    "automation"
+  ],
+  "author": "Nick Friedrich",
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "bun": ">=1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nick-friedrich/db-backup-manager.git"
+  }
+}
