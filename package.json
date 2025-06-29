@@ -2,7 +2,6 @@
   "name": "db-backup-manager",
   "version": "1.0.0",
   "description": "A powerful PostgreSQL backup manager with automated scheduling and Docker support",
-  "main": "index.js",
   "scripts": {
     "install": "bun install && bun --cwd apps/dbm-backend install && bun --cwd apps/dbm-frontend install && bun --cwd packages/dbschema install",
     "dev": "concurrently \"bun --cwd apps/dbm-backend run dev\" \"bun --cwd apps/dbm-frontend run dev\"",
@@ -15,7 +14,7 @@
   },
   "keywords": [
     "postgresql",
-    "backup", 
+    "backup",
     "database",
     "scheduler",
     "docker",

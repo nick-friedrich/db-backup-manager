@@ -232,6 +232,16 @@ bun run drizzle-kit  # Database operations
 bun run dk          # Drizzle kit shorthand
 ```
 
+### Testing
+
+```bash
+# Run tests (when available)
+bun test
+
+# Manual testing with curl
+curl http://localhost:3000/health
+```
+
 ### Project Structure
 
 ```
