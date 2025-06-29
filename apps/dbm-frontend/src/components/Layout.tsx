@@ -13,6 +13,7 @@ export const Layout = () => {
     { name: "Connections", href: "/", icon: "🔗" },
     { name: "Schedules", href: "/schedules", icon: "⏰" },
     { name: "Backup Files", href: "/files", icon: "📁" },
+    { name: "Import/Export", href: "/import-export", icon: "📦" },
   ];
 
   return (

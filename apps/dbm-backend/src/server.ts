@@ -6,6 +6,7 @@ import { blogController } from "./controller/blog_controller";
 import { connectionController } from "./controller/database_backupmanager/connection_controller";
 import { scheduleController } from "./controller/database_backupmanager/schedule_controller";
 import { backupController } from "./controller/database_backupmanager/backup_controller";
+import { importExportController } from "./controller/database_backupmanager/import_export_controller";
 import { backupScheduler } from "./services/backup-scheduler";
 
 const app = new Elysia()
@@ -21,6 +22,7 @@ const app = new Elysia()
   .use(connectionController)
   .use(scheduleController)
   .use(backupController)
+  .use(importExportController)
   .get("/user", ({ user }) => user, {
     auth: true
   })

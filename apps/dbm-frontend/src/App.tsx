@@ -4,6 +4,7 @@ import { Layout } from "./components/Layout";
 import { DatabaseConnections } from "./components/DatabaseConnections";
 import { BackupSchedules } from "./components/BackupSchedules";
 import { BackupFiles } from "./components/BackupFiles";
+import { ImportExport } from "./components/ImportExport";
 import { Routes, Route, Navigate } from "react-router";
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
         <Route index element={<DatabaseConnections />} />
         <Route path="schedules" element={<BackupSchedules />} />
         <Route path="files" element={<BackupFiles />} />
+        <Route path="import-export" element={<ImportExport />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
