@@ -88,15 +88,16 @@ async function executeDockerPgDump(connection: BackupConnection, filePath: strin
     const dockerImage = `postgres:${pgVersion}`;
 
     // Create absolute path for the backup file (Docker needs absolute paths for volume mounts)
-    const absoluteFilePath = join(process.cwd(), filePath);
-    const backupFileName = absoluteFilePath.split("/").pop() || "backup.sql";
+    const absoluteFilePath = path.resolve(filePath);
+    const backupFileName = path.basename(absoluteFilePath);
+    const backupDir = path.dirname(absoluteFilePath);
 
     console.log(`Starting Docker PostgreSQL backup: ${connection.name} using ${dockerImage}`);
 
     // Docker command to run pg_dump
     const args = [
       "docker", "run", "--rm",
-      "-v", `${process.cwd()}/backups:/backups`,
+      "-v", `${backupDir}:/backups`,
       "-e", `PGPASSWORD=${connection.password}`,
       dockerImage,
       "pg_dump",

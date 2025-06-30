@@ -2,8 +2,6 @@ import { eq } from "drizzle-orm";
 import { db } from "../db";
 import { backupSchedule, backupConnection, backupFile } from "@packages/sqlite_schema/dbm";
 import { executeBackup } from "./backup-executor";
-import { homedir } from "node:os";
-import path from "node:path";
 import { backupDirectory } from "../lib/backup.config";
 
 interface ScheduledJob {
@@ -51,7 +49,7 @@ class BackupScheduler {
       return;
     }
 
-    // Calculate next run time based on cron expression
+    // Calculate next run time based on cron expression  
     const nextRunTime = this.calculateNextRun(schedule.cronExpression);
     const delay = nextRunTime.getTime() - Date.now();
 

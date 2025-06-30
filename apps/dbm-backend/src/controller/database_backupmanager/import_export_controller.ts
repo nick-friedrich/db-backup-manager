@@ -5,7 +5,7 @@ import { backupConnection, backupSchedule, backupFile } from "@packages/sqlite_s
 import { authPlugin } from "../../lib/auth-plugin";
 import { backupScheduler } from "../../services/backup-scheduler";
 import * as path from "node:path";
-import { mkdir, rm } from "node:fs/promises";
+import { mkdir, rm, stat } from "node:fs/promises";
 import { homedir } from "node:os";
 import { backupDirectory } from "../../lib/backup.config";
 
@@ -177,8 +177,8 @@ export const importExportController = new Elysia({ prefix: "/import-export" })
             ...conn,
             id: newId,
             userId: user.id,
-            createdAt: new Date(conn.createdAt),
-            updatedAt: new Date(conn.updatedAt)
+            createdAt: conn.createdAt ? new Date(conn.createdAt) : undefined,
+            updatedAt: conn.updatedAt ? new Date(conn.updatedAt) : undefined
           });
 
           results.connections.imported++;
@@ -206,8 +206,10 @@ export const importExportController = new Elysia({ prefix: "/import-export" })
             id: newId,
             connectionId: newConnectionId,
             userId: user.id,
-            createdAt: new Date(schedule.createdAt),
-            updatedAt: new Date(schedule.updatedAt)
+            createdAt: schedule.createdAt ? new Date(schedule.createdAt) : undefined,
+            updatedAt: schedule.updatedAt ? new Date(schedule.updatedAt) : undefined,
+            lastRunAt: schedule.lastRunAt ? new Date(schedule.lastRunAt) : undefined,
+            nextRunAt: schedule.nextRunAt ? new Date(schedule.nextRunAt) : undefined
           });
 
           // Schedule the backup if it's active
@@ -223,7 +225,14 @@ export const importExportController = new Elysia({ prefix: "/import-export" })
 
       // Import backup files and records
       const backupFilesDir = path.join(tempDir, "backup_files");
-      const backupFilesDirExists = await Bun.file(backupFilesDir).exists();
+      let backupFilesDirExists = false;
+      try {
+        const stats = await stat(backupFilesDir);
+        backupFilesDirExists = stats.isDirectory();
+      } catch (error) {
+        backupFilesDirExists = false;
+      }
+      console.log(`Backup files directory: ${backupFilesDir}, exists: ${backupFilesDirExists}`);
 
       for (const backup of importData.data.backups) {
         try {
@@ -231,19 +240,26 @@ export const importExportController = new Elysia({ prefix: "/import-export" })
           const newScheduleId = backup.scheduleId ? scheduleIdMap.get(backup.scheduleId) : null;
 
           // Prepare backup directory
-          const backupsDir = backupDirectory;
+          const backupsDir = path.resolve(backupDirectory);
+          console.log(`Creating backup directory: ${backupsDir}`);
           await mkdir(backupsDir, { recursive: true });
 
-          let newFilePath = null;
+          let newFilePath = '';
 
           // Copy backup file if it exists
+          console.log(`Checking backup: status=${backup.status}, fileName=${backup.fileName}, backupFilesDirExists=${backupFilesDirExists}`);
           if (backup.status === 'completed' && backup.fileName && backupFilesDirExists) {
             const sourceFile = path.join(backupFilesDir, backup.fileName);
             const sourceFileExists = await Bun.file(sourceFile).exists();
 
             if (sourceFileExists) {
-              newFilePath = path.join(backupsDir, backup.fileName);
-              await Bun.write(newFilePath, Bun.file(sourceFile));
+              const targetPath = path.join(backupsDir, backup.fileName);
+              console.log(`Copying backup file from ${sourceFile} to ${targetPath}`);
+              await Bun.write(targetPath, Bun.file(sourceFile));
+              console.log(`File copied successfully, setting filePath to: ${targetPath}`);
+              newFilePath = targetPath;
+            } else {
+              console.log(`Source file does not exist: ${sourceFile}`);
             }
           }
 
@@ -253,9 +269,9 @@ export const importExportController = new Elysia({ prefix: "/import-export" })
             scheduleId: newScheduleId,
             userId: user.id,
             filePath: newFilePath,
-            createdAt: new Date(backup.createdAt),
-            startedAt: backup.startedAt ? new Date(backup.startedAt) : null,
-            completedAt: backup.completedAt ? new Date(backup.completedAt) : null
+            createdAt: backup.createdAt ? new Date(backup.createdAt) : undefined,
+            startedAt: backup.startedAt ? new Date(backup.startedAt) : undefined,
+            completedAt: backup.completedAt ? new Date(backup.completedAt) : undefined
           });
 
           results.backups.imported++;
