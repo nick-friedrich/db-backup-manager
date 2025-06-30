@@ -1,5 +1,7 @@
 import { mkdir } from "node:fs/promises";
-import { join } from "node:path";
+import { homedir } from "node:os";
+import path, { join } from "node:path";
+import { backupDirectory } from "../lib/backup.config";
 
 interface BackupConnection {
   id: string;
@@ -23,9 +25,9 @@ interface BackupResult {
 export async function executeBackup(connection: BackupConnection, fileName: string): Promise<BackupResult> {
   try {
     // Ensure backup directory exists
-    const backupDir = "./backups";
+    const backupDir = backupDirectory;
     await mkdir(backupDir, { recursive: true });
-    
+
     const filePath = join(backupDir, fileName);
 
     if (connection.type === "postgresql") {
@@ -48,7 +50,7 @@ async function executePostgreSQLBackup(connection: BackupConnection, filePath: s
   try {
     // Check if Docker is available
     const dockerAvailable = await checkDockerAvailability();
-    
+
     if (!dockerAvailable) {
       console.warn("Docker not available, falling back to system pg_dump");
       return await executeSystemPgDump(connection, filePath);
@@ -71,7 +73,7 @@ async function checkDockerAvailability(): Promise<boolean> {
       stdout: "pipe",
       stderr: "pipe"
     });
-    
+
     const exitCode = await proc.exited;
     return exitCode === 0;
   } catch (_error) {
@@ -84,13 +86,13 @@ async function executeDockerPgDump(connection: BackupConnection, filePath: strin
     // Determine PostgreSQL version for Docker image
     const pgVersion = connection.postgresqlVersion || "16"; // Default to 16 if not detected
     const dockerImage = `postgres:${pgVersion}`;
-    
+
     // Create absolute path for the backup file (Docker needs absolute paths for volume mounts)
     const absoluteFilePath = join(process.cwd(), filePath);
     const backupFileName = absoluteFilePath.split("/").pop() || "backup.sql";
-    
+
     console.log(`Starting Docker PostgreSQL backup: ${connection.name} using ${dockerImage}`);
-    
+
     // Docker command to run pg_dump
     const args = [
       "docker", "run", "--rm",
@@ -125,7 +127,7 @@ async function executeDockerPgDump(connection: BackupConnection, filePath: strin
       const fileSize = file.size;
 
       console.log(`Docker PostgreSQL backup completed: ${absoluteFilePath} (${fileSize} bytes)`);
-      
+
       return {
         success: true,
         filePath: absoluteFilePath,
@@ -134,7 +136,7 @@ async function executeDockerPgDump(connection: BackupConnection, filePath: strin
     } else {
       const stderr = await new Response(proc.stderr).text();
       console.error(`Docker PostgreSQL backup failed: ${stderr}`);
-      
+
       return {
         success: false,
         error: `Docker pg_dump failed with exit code ${exitCode}: ${stderr}`
@@ -189,7 +191,7 @@ async function executeSystemPgDump(connection: BackupConnection, filePath: strin
       const fileSize = file.size;
 
       console.log(`System PostgreSQL backup completed: ${filePath} (${fileSize} bytes)`);
-      
+
       return {
         success: true,
         filePath,
@@ -198,7 +200,7 @@ async function executeSystemPgDump(connection: BackupConnection, filePath: strin
     } else {
       const stderr = await new Response(proc.stderr).text();
       console.error(`System PostgreSQL backup failed: ${stderr}`);
-      
+
       return {
         success: false,
         error: `pg_dump failed with exit code ${exitCode}: ${stderr}`
@@ -216,7 +218,7 @@ async function executeSystemPgDump(connection: BackupConnection, filePath: strin
 export async function testBackup(connection: BackupConnection): Promise<BackupResult> {
   const testFileName = `test_backup_${Date.now()}.sql`;
   const result = await executeBackup(connection, testFileName);
-  
+
   // Clean up test file if it was created
   if (result.success && result.filePath) {
     try {
@@ -225,6 +227,6 @@ export async function testBackup(connection: BackupConnection): Promise<BackupRe
       console.warn("Failed to clean up test backup file:", error);
     }
   }
-  
+
   return result;
 }

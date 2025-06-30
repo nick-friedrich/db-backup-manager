@@ -1,11 +1,13 @@
 import { Elysia, t } from "elysia";
 import { eq } from "drizzle-orm";
 import { db } from "../../db";
-import { backupConnection, backupSchedule, backupFile } from "@packages/dbschema/dbm";
+import { backupConnection, backupSchedule, backupFile } from "@packages/sqlite_schema/dbm";
 import { authPlugin } from "../../lib/auth-plugin";
 import { backupScheduler } from "../../services/backup-scheduler";
 import * as path from "node:path";
 import { mkdir, rm } from "node:fs/promises";
+import { homedir } from "node:os";
+import { backupDirectory } from "../../lib/backup.config";
 
 export const importExportController = new Elysia({ prefix: "/import-export" })
   .use(authPlugin)
@@ -108,9 +110,9 @@ export const importExportController = new Elysia({ prefix: "/import-export" })
       return zipFile;
     } catch (error) {
       set.status = 500;
-      return { 
-        error: "Export failed", 
-        message: error instanceof Error ? error.message : "Unknown error" 
+      return {
+        error: "Export failed",
+        message: error instanceof Error ? error.message : "Unknown error"
       };
     }
   }, {
@@ -144,14 +146,14 @@ export const importExportController = new Elysia({ prefix: "/import-export" })
       // Read metadata
       const metadataPath = path.join(tempDir, "metadata.json");
       const metadataFile = Bun.file(metadataPath);
-      
+
       if (!(await metadataFile.exists())) {
         set.status = 400;
         return { error: "Invalid export file: missing metadata" };
       }
 
       const importData = await metadataFile.json();
-      
+
       if (!importData.version || !importData.data) {
         set.status = 400;
         return { error: "Invalid export file format" };
@@ -170,7 +172,7 @@ export const importExportController = new Elysia({ prefix: "/import-export" })
         try {
           const newId = crypto.randomUUID();
           connectionIdMap.set(conn.id, newId);
-          
+
           await db.insert(backupConnection).values({
             ...conn,
             id: newId,
@@ -178,7 +180,7 @@ export const importExportController = new Elysia({ prefix: "/import-export" })
             createdAt: new Date(conn.createdAt),
             updatedAt: new Date(conn.updatedAt)
           });
-          
+
           results.connections.imported++;
         } catch (error) {
           results.connections.errors.push(`Failed to import connection "${conn.name}": ${error}`);
@@ -191,14 +193,14 @@ export const importExportController = new Elysia({ prefix: "/import-export" })
         try {
           const newId = crypto.randomUUID();
           const newConnectionId = connectionIdMap.get(schedule.connectionId);
-          
+
           if (!newConnectionId) {
             results.schedules.errors.push(`Schedule "${schedule.name}" skipped: connection not found`);
             continue;
           }
-          
+
           scheduleIdMap.set(schedule.id, newId);
-          
+
           await db.insert(backupSchedule).values({
             ...schedule,
             id: newId,
@@ -207,12 +209,12 @@ export const importExportController = new Elysia({ prefix: "/import-export" })
             createdAt: new Date(schedule.createdAt),
             updatedAt: new Date(schedule.updatedAt)
           });
-          
+
           // Schedule the backup if it's active
           if (schedule.isActive) {
             await backupScheduler.scheduleBackup(newId);
           }
-          
+
           results.schedules.imported++;
         } catch (error) {
           results.schedules.errors.push(`Failed to import schedule "${schedule.name}": ${error}`);
@@ -222,29 +224,29 @@ export const importExportController = new Elysia({ prefix: "/import-export" })
       // Import backup files and records
       const backupFilesDir = path.join(tempDir, "backup_files");
       const backupFilesDirExists = await Bun.file(backupFilesDir).exists();
-      
+
       for (const backup of importData.data.backups) {
         try {
           const newId = crypto.randomUUID();
           const newScheduleId = backup.scheduleId ? scheduleIdMap.get(backup.scheduleId) : null;
-          
+
           // Prepare backup directory
-          const backupsDir = "backups";
+          const backupsDir = backupDirectory;
           await mkdir(backupsDir, { recursive: true });
-          
+
           let newFilePath = null;
-          
+
           // Copy backup file if it exists
           if (backup.status === 'completed' && backup.fileName && backupFilesDirExists) {
             const sourceFile = path.join(backupFilesDir, backup.fileName);
             const sourceFileExists = await Bun.file(sourceFile).exists();
-            
+
             if (sourceFileExists) {
               newFilePath = path.join(backupsDir, backup.fileName);
               await Bun.write(newFilePath, Bun.file(sourceFile));
             }
           }
-          
+
           await db.insert(backupFile).values({
             ...backup,
             id: newId,
@@ -255,7 +257,7 @@ export const importExportController = new Elysia({ prefix: "/import-export" })
             startedAt: backup.startedAt ? new Date(backup.startedAt) : null,
             completedAt: backup.completedAt ? new Date(backup.completedAt) : null
           });
-          
+
           results.backups.imported++;
         } catch (error) {
           results.backups.errors.push(`Failed to import backup "${backup.fileName}": ${error}`);
@@ -271,9 +273,9 @@ export const importExportController = new Elysia({ prefix: "/import-export" })
       };
     } catch (error) {
       set.status = 500;
-      return { 
-        error: "Import failed", 
-        message: error instanceof Error ? error.message : "Unknown error" 
+      return {
+        error: "Import failed",
+        message: error instanceof Error ? error.message : "Unknown error"
       };
     }
   }, {

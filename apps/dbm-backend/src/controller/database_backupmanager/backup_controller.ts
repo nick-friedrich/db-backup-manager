@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia";
 import { eq, desc, and } from "drizzle-orm";
 import { db } from "../../db";
-import { backupFile, backupSchedule, backupConnection } from "@packages/dbschema/dbm";
+import { backupFile, backupSchedule, backupConnection } from "@packages/sqlite_schema/dbm";
 import { unlink } from "node:fs/promises";
 import { authPlugin } from "../../lib/auth-plugin";
 

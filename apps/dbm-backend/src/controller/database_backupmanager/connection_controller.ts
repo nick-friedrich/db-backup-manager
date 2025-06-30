@@ -2,7 +2,7 @@
 import { Elysia, t } from "elysia";
 import { and, eq } from "drizzle-orm";
 import { db } from "../../db";
-import { backupConnection } from "@packages/dbschema/dbm";
+import { backupConnection } from "@packages/sqlite_schema/dbm";
 import { Client } from "pg";
 import { authPlugin } from "../../lib/auth-plugin";
 
@@ -206,33 +206,33 @@ export const connectionController = new Elysia({ prefix: "/connections" })
         });
 
         await client.connect();
-        
+
         // Test basic connectivity
         await client.query('SELECT 1');
-        
+
         // Detect PostgreSQL version
         const versionResult = await client.query('SELECT version()');
         const versionString = versionResult.rows[0]?.version || "";
-        
+
         // Parse major version from version string (e.g., "PostgreSQL 16.1..." -> "16")
         const versionMatch = versionString.match(/PostgreSQL (\d+)\./);
         const majorVersion = versionMatch ? versionMatch[1] : null;
-        
+
         await client.end();
 
         // Update connection with detected version if found
         if (majorVersion) {
           await db
             .update(backupConnection)
-            .set({ 
+            .set({
               postgresqlVersion: majorVersion,
               updatedAt: new Date()
             })
             .where(eq(backupConnection.id, params.id));
         }
 
-        return { 
-          success: true, 
+        return {
+          success: true,
           message: "Connection successful",
           postgresqlVersion: majorVersion,
           detectedVersion: versionString

@@ -1,7 +1,10 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { backupSchedule, backupConnection, backupFile } from "@packages/dbschema/dbm";
+import { backupSchedule, backupConnection, backupFile } from "@packages/sqlite_schema/dbm";
 import { executeBackup } from "./backup-executor";
+import { homedir } from "node:os";
+import path from "node:path";
+import { backupDirectory } from "../lib/backup.config";
 
 interface ScheduledJob {
   scheduleId: string;
@@ -13,7 +16,7 @@ class BackupScheduler {
 
   async initialize() {
     console.log("Initializing backup scheduler...");
-    
+
     // Load all active schedules from database
     const activeSchedules = await db
       .select({
@@ -117,13 +120,13 @@ class BackupScheduler {
       // Create backup file record
       const backupFileId = crypto.randomUUID();
       const fileName = `backup_${connection.name}_${new Date().toISOString().replace(/[:.]/g, '-')}.sql`;
-      
+
       await db
         .insert(backupFile)
         .values({
           id: backupFileId,
           fileName,
-          filePath: `./backups/${fileName}`,
+          filePath: `${backupDirectory}/${fileName}`,
           fileSizeBytes: 0,
           status: 'pending',
           scheduleId: schedule.id,
@@ -165,7 +168,7 @@ class BackupScheduler {
 
   async cancelSchedule(scheduleId: string) {
     this.cancelJob(scheduleId);
-    
+
     // Mark schedule as inactive
     await db
       .update(backupSchedule)
@@ -187,7 +190,7 @@ class BackupScheduler {
     // Handle simple cases for now
     if (minute !== '*' && hour !== '*') {
       next.setHours(parseInt(hour), parseInt(minute), 0, 0);
-      
+
       // If time has passed today, schedule for tomorrow
       if (next <= now) {
         next.setDate(next.getDate() + 1);

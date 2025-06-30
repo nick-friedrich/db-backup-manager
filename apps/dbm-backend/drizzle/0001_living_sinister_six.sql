@@ -1,1 +1,0 @@
-ALTER TABLE "backup_connection" ADD COLUMN "postgresql_version" text;

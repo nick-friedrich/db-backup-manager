@@ -3,13 +3,19 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/server.ts",
+    "dev": "bun run db:migrate && bun run --watch src/server.ts",
     "drizzle-kit": "drizzle-kit",
-    "dk": "drizzle-kit"
+    "dk": "drizzle-kit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "db:push": "drizzle-kit push",
+    "reset-db": "bun run src/db/reset-db.js"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.3.3",
-    "@packages/pg_schema": "workspace:*",
+    "@libsql/client": "^0.15.9",
+    "@packages/sqlite_schema": "workspace:*",
     "better-auth": "^1.2.10",
     "dotenv": "^16.6.1",
     "drizzle-orm": "^0.44.2",
