@@ -4,9 +4,9 @@
   "description": "A powerful PostgreSQL backup manager with automated scheduling, Docker support, and version detection",
   "scripts": {
     "install": "bun install && bun --cwd apps/dbm-backend install && bun --cwd apps/dbm-frontend install && bun --cwd packages/sqlite_schema install",
-    "dev": "concurrently \"bun --cwd apps/dbm-backend run dev\" \"bun --cwd apps/dbm-frontend run dev\"",
-    "dev:backend": "bun --cwd apps/dbm-backend run dev",
-    "dev:frontend": "bun --cwd apps/dbm-frontend run dev",
+    "dev": "concurrently --kill-others-on-fail --names \"DBM-BE,DBM-FE\" --name-colors \"cyan,magenta\" \"bun run dev:dbm:backend\" \"bun run dev:dbm:frontend\"",
+    "dev:backend": "cd apps/dbm-backend && bun run dev",
+    "dev:frontend": "cd apps/dbm-frontend && bun run dev",
     "start": "bun run dev",
     "migrate": "bun --cwd apps/dbm-backend run drizzle-kit migrate",
     "lint": "bun --cwd apps/dbm-backend run lint && bun --cwd apps/dbm-frontend run lint",

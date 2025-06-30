@@ -12,12 +12,6 @@ cd db-backup-manager
 # Install dependencies
 bun install
 
-# Start PostgreSQL database
-docker-compose up -d
-
-# Run migrations
-bun run migrate
-
 # Start the application
 bun run dev
 ```
@@ -28,7 +22,7 @@ bun run dev
 db-backup-manager/
 ├── apps/
 │   ├── dbm-backend/      # Elysia.js API server
-│   └── dbm-frontend/     # React web interface  
+│   └── dbm-frontend/     # React web interface
 ├── packages/
 │   └── sqlite_schema/    # Shared database schemas
 ├── docker-compose.yml
@@ -46,7 +40,6 @@ db-backup-manager/
 - ⚡ **Built with Bun** - High-performance runtime with Elysia framework
 - 🔒 **Secure** - Better Auth integration with user isolation
 - 📦 **Import/Export** - Full data backup and restore functionality
-- 💾 **SQLite Support** - Lightweight database option for simple deployments
 
 ## 📚 Documentation
 
@@ -57,16 +50,19 @@ db-backup-manager/
 ## 🛠️ Development
 
 ### Backend Development
+
 ```bash
 bun run dev:backend
 ```
 
-### Frontend Development  
+### Frontend Development
+
 ```bash
 bun run dev:frontend
 ```
 
 ### Run Both
+
 ```bash
 bun run dev
 ```
@@ -74,15 +70,10 @@ bun run dev
 ## 🚀 Deployment
 
 ### Using Docker
+
 ```bash
 docker-compose up -d
 ```
-
-### Manual Deployment
-1. Set up PostgreSQL database
-2. Configure environment variables
-3. Run migrations: `bun run migrate`
-4. Start the application: `bun start`
 
 ## 🤝 Contributing
 
