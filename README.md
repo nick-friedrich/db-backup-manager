@@ -30,7 +30,7 @@ db-backup-manager/
 │   ├── dbm-backend/      # Elysia.js API server
 │   └── dbm-frontend/     # React web interface  
 ├── packages/
-│   └── dbschema/         # Shared database schemas
+│   └── pg_schema/         # Shared database schemas
 ├── docker-compose.yml
 ├── package.json
 └── README.md
@@ -50,7 +50,7 @@ db-backup-manager/
 
 - [Backend Documentation](./apps/dbm-backend/README.md) - API endpoints and server setup
 - [Frontend Documentation](./apps/dbm-frontend/README.md) - UI components and development
-- [Shared Schemas](./packages/dbschema/README.md) - Database schema documentation
+- [Shared Schemas](./packages/pg_schema/README.md) - Database schema documentation
 
 ## 🤝 Contributing
 
