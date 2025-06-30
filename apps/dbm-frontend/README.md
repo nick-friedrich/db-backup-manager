@@ -1,6 +1,6 @@
 # Database Backup Manager - Frontend
 
-A modern React-based frontend for the Database Backup Manager, providing an intuitive web interface for managing PostgreSQL backups.
+A modern frontend for the Database Backup Manager, providing an intuitive web interface for managing PostgreSQL backups.
 
 ## Features
 

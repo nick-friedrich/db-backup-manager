@@ -1,0 +1,16 @@
+{
+  "name": "@packages/sqlite_schema",
+  "version": "1.0.0",
+  "description": "SQLite database schemas for DBM application",
+  "dependencies": {
+    "drizzle-orm": "^0.44.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:",
+    "@types/bun": "catalog:"
+  },
+  "exports": {
+    "./auth": "./src/auth_schema.ts",
+    "./dbm": "./src/dbm_schema.ts"
+  }
+}

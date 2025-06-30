@@ -16,7 +16,7 @@ bun install
 docker-compose up -d
 
 # Run migrations
-bun --cwd apps/dbm-backend run drizzle-kit migrate
+bun run migrate
 
 # Start the application
 bun run dev
@@ -30,7 +30,7 @@ db-backup-manager/
 │   ├── dbm-backend/      # Elysia.js API server
 │   └── dbm-frontend/     # React web interface  
 ├── packages/
-│   └── pg_schema/         # Shared database schemas
+│   └── sqlite_schema/    # Shared database schemas
 ├── docker-compose.yml
 ├── package.json
 └── README.md
@@ -45,12 +45,44 @@ db-backup-manager/
 - 🌐 **REST API** - Complete CRUD operations for connections and schedules
 - ⚡ **Built with Bun** - High-performance runtime with Elysia framework
 - 🔒 **Secure** - Better Auth integration with user isolation
+- 📦 **Import/Export** - Full data backup and restore functionality
+- 💾 **SQLite Support** - Lightweight database option for simple deployments
 
 ## 📚 Documentation
 
 - [Backend Documentation](./apps/dbm-backend/README.md) - API endpoints and server setup
 - [Frontend Documentation](./apps/dbm-frontend/README.md) - UI components and development
-- [Shared Schemas](./packages/pg_schema/README.md) - Database schema documentation
+- [Database Schemas](./packages/sqlite_schema/README.md) - Database schema documentation
+
+## 🛠️ Development
+
+### Backend Development
+```bash
+bun run dev:backend
+```
+
+### Frontend Development  
+```bash
+bun run dev:frontend
+```
+
+### Run Both
+```bash
+bun run dev
+```
+
+## 🚀 Deployment
+
+### Using Docker
+```bash
+docker-compose up -d
+```
+
+### Manual Deployment
+1. Set up PostgreSQL database
+2. Configure environment variables
+3. Run migrations: `bun run migrate`
+4. Start the application: `bun start`
 
 ## 🤝 Contributing
 

@@ -1,13 +1,13 @@
 {
   "name": "db-backup-manager",
   "version": "1.0.0",
-  "description": "A powerful PostgreSQL backup manager with automated scheduling and Docker support",
+  "description": "A powerful PostgreSQL backup manager with automated scheduling, Docker support, and version detection",
   "scripts": {
-    "install": "bun install && bun --cwd apps/dbm-backend install && bun --cwd apps/dbm-frontend install && bun --cwd packages/pg_schema install",
+    "install": "bun install && bun --cwd apps/dbm-backend install && bun --cwd apps/dbm-frontend install && bun --cwd packages/sqlite_schema install",
     "dev": "concurrently \"bun --cwd apps/dbm-backend run dev\" \"bun --cwd apps/dbm-frontend run dev\"",
     "dev:backend": "bun --cwd apps/dbm-backend run dev",
     "dev:frontend": "bun --cwd apps/dbm-frontend run dev",
-    "start": "npm run dev",
+    "start": "bun run dev",
     "migrate": "bun --cwd apps/dbm-backend run drizzle-kit migrate",
     "lint": "bun --cwd apps/dbm-backend run lint && bun --cwd apps/dbm-frontend run lint",
     "format": "bun --cwd apps/dbm-backend run format && bun --cwd apps/dbm-frontend run format"
@@ -19,7 +19,10 @@
     "scheduler",
     "docker",
     "pg_dump",
-    "automation"
+    "automation",
+    "sqlite",
+    "elysia",
+    "react"
   ],
   "author": "Nick Friedrich",
   "license": "MIT",
@@ -33,5 +36,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/nick-friedrich/db-backup-manager.git"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/nick-friedrich/db-backup-manager/issues"
+  },
+  "homepage": "https://github.com/nick-friedrich/db-backup-manager#readme"
 }
