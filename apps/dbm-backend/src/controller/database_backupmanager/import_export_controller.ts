@@ -6,7 +6,6 @@ import { authPlugin } from "../../lib/auth-plugin";
 import { backupScheduler } from "../../services/backup-scheduler";
 import * as path from "node:path";
 import { mkdir, rm, stat } from "node:fs/promises";
-import { homedir } from "node:os";
 import { backupDirectory } from "../../lib/backup.config";
 
 export const importExportController = new Elysia({ prefix: "/import-export" })

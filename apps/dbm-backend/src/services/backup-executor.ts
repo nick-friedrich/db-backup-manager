@@ -1,5 +1,4 @@
 import { mkdir } from "node:fs/promises";
-import { homedir } from "node:os";
 import path, { join } from "node:path";
 import { backupDirectory } from "../lib/backup.config";
 
@@ -169,8 +168,16 @@ async function executeSystemPgDump(connection: BackupConnection, filePath: strin
     ];
 
     // Set environment variables for authentication
+    // Filter process.env to only include string values
+    const filteredEnv: Record<string, string> = {};
+    for (const [key, value] of Object.entries(process.env)) {
+      if (typeof value === 'string') {
+        filteredEnv[key] = value;
+      }
+    }
+
     const env = {
-      ...process.env,
+      ...filteredEnv,
       PGPASSWORD: connection.password
     };
 
