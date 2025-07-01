@@ -6,11 +6,7 @@
     "packages": [
       "apps/*",
       "packages/*"
-    ],
-    "catalog": {
-      "@biomejs/biome": "2.0.6",
-      "@types/bun": "latest"
-    }
+    ]
   },
   "scripts": {
     "dev": "concurrently --kill-others-on-fail --names \"DBM-BE,DBM-FE\" --name-colors \"cyan,magenta\" \"bun run dev:backend\" \"bun run dev:frontend\"",
