@@ -8,7 +8,6 @@ import { scheduleController } from "./controller/database_backupmanager/schedule
 import { backupController } from "./controller/database_backupmanager/backup_controller";
 import { importExportController } from "./controller/database_backupmanager/import_export_controller";
 import { backupScheduler } from "./services/backup-scheduler";
-import { staticPlugin } from "@elysiajs/static";
 
 const app = new Elysia()
   .use(cors({
@@ -16,16 +15,6 @@ const app = new Elysia()
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', 'Content-Disposition'],
     // exposedHeaders: ['Content-Disposition', 'Content-Type', 'Content-Length']
-  }))
-  // Serve static assets from public folder
-  .use(staticPlugin({
-    assets: './public',
-    prefix: '/public'
-  }))
-  // Serve built frontend assets
-  .use(staticPlugin({
-    assets: '../dbm-frontend/dist/assets',
-    prefix: '/assets'
   }))
   .use(authPlugin)
   .group("/api", (app) => {
@@ -47,7 +36,6 @@ const app = new Elysia()
         auth: true
       })
   })
-
   .listen(3000);
 
 // Initialize backup scheduler
