@@ -44,6 +44,11 @@
   "dependencies": {
     "concurrently": "^8.2.2"
   },
+  "devDependencies": {
+    "@biomejs/biome": "2.0.6",
+    "@types/bun": "latest",
+    "husky": "^9.1.7"
+  },
   "engines": {
     "node": ">=18.0.0",
     "bun": ">=1.0.0"
