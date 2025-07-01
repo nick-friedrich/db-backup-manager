@@ -57,8 +57,8 @@ export const BackupSchedules = () => {
     try {
       setLoading(true);
       const [schedulesResponse, connectionsResponse] = await Promise.all([
-        client.schedules.get(),
-        client.connections.get(),
+        client.api.schedules.get(),
+        client.api.connections.get(),
       ]);
 
       if (schedulesResponse.data) {
@@ -78,9 +78,9 @@ export const BackupSchedules = () => {
     e.preventDefault();
     try {
       if (editingSchedule) {
-        await client.schedules({ id: editingSchedule.id }).put(formData);
+        await client.api.schedules({ id: editingSchedule.id }).put(formData);
       } else {
-        await client.schedules.post(formData);
+        await client.api.schedules.post(formData);
       }
       await fetchData();
       resetForm();
@@ -103,7 +103,7 @@ export const BackupSchedules = () => {
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this schedule?")) {
       try {
-        await client.schedules({ id }).delete();
+        await client.api.schedules({ id }).delete();
         await fetchData();
       } catch (error) {
         console.error("Failed to delete schedule:", error);
@@ -113,7 +113,7 @@ export const BackupSchedules = () => {
 
   const toggleSchedule = async (id: string) => {
     try {
-      await client.schedules({ id }).toggle.post();
+      await client.api.schedules({ id }).toggle.post();
       await fetchData();
     } catch (error) {
       console.error("Failed to toggle schedule:", error);
@@ -122,7 +122,7 @@ export const BackupSchedules = () => {
 
   const runNow = async (id: string) => {
     try {
-      await client.schedules({ id }).run.post();
+      await client.api.schedules({ id }).run.post();
       alert("Backup triggered successfully!");
     } catch (error) {
       console.error("Failed to trigger backup:", error);

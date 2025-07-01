@@ -39,13 +39,13 @@ export const BackupFiles = () => {
     try {
       setLoading(true);
       const [backupsResponse, statsResponse] = await Promise.all([
-        client.backups.get({
+        client.api.backups.get({
           query: {
             limit: "100",
             offset: "0",
           },
         }),
-        client.backups.stats.summary.get(),
+        client.api.backups.stats.summary.get(),
       ]);
 
       if (backupsResponse.data) {
@@ -80,7 +80,7 @@ export const BackupFiles = () => {
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this backup file?")) {
       try {
-        await client.backups({ id }).delete();
+        await client.api.backups({ id }).delete();
         await fetchData();
       } catch (error) {
         console.error("Failed to delete backup:", error);

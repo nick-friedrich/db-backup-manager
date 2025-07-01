@@ -63,7 +63,7 @@ export const DatabaseConnections = () => {
   const fetchConnections = async () => {
     try {
       setLoading(true);
-      const response = await client.connections.get();
+      const response = await client.api.connections.get();
       if (response.data) {
         setConnections(response.data.connections);
       }
@@ -78,9 +78,11 @@ export const DatabaseConnections = () => {
     e.preventDefault();
     try {
       if (editingConnection) {
-        await client.connections({ id: editingConnection.id }).put(formData);
+        await client.api
+          .connections({ id: editingConnection.id })
+          .put(formData);
       } else {
-        await client.connections.post(formData);
+        await client.api.connections.post(formData);
       }
       await fetchConnections();
       resetForm();
@@ -106,7 +108,7 @@ export const DatabaseConnections = () => {
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this connection?")) {
       try {
-        await client.connections({ id }).delete();
+        await client.api.connections({ id }).delete();
         await fetchConnections();
       } catch (error) {
         console.error("Failed to delete connection:", error);
@@ -117,7 +119,7 @@ export const DatabaseConnections = () => {
   const testConnection = async (id: string) => {
     try {
       setTestingConnection(id);
-      const response = await client.connections({ id }).test.post();
+      const response = await client.api.connections({ id }).test.post();
       if (response.data?.success) {
         alert("Connection successful!");
       } else {
@@ -161,7 +163,7 @@ export const DatabaseConnections = () => {
         ...parsed,
       };
 
-      await client.connections.post(connectionData);
+      await client.api.connections.post(connectionData);
       await fetchConnections();
       resetConnectionStringForm();
     } catch (error) {

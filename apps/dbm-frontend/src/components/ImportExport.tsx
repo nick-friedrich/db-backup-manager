@@ -52,7 +52,7 @@ export const ImportExport = () => {
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await client["import-export"].import.post({ file });
+      const response = await client.api["import-export"].import.post({ file });
 
       if (response.data && "results" in response.data) {
         setImportResults(response.data.results as ImportResults);
