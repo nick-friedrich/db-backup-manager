@@ -2,16 +2,10 @@
   "name": "db-backup-manager",
   "version": "1.0.0",
   "description": "A powerful PostgreSQL backup manager with automated scheduling, Docker support, and version detection",
-  "workspaces": {
-    "packages": [
-      "apps/*",
-      "packages/*"
-    ],
-    "catalog": {
-      "@biomejs/biome": "2.0.6",
-      "@types/bun": "latest"
-    }
-  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "install": "bun install && bun --cwd apps/dbm-backend install && bun --cwd apps/dbm-frontend install && bun --cwd packages/sqlite_schema install",
     "dev": "concurrently --kill-others-on-fail --names \"DBM-BE,DBM-FE\" --name-colors \"cyan,magenta\" \"bun run dev:backend\" \"bun run dev:frontend\"",
