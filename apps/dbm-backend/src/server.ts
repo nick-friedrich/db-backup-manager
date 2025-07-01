@@ -1,4 +1,4 @@
-import { Elysia, file } from "elysia";
+import { Elysia } from "elysia";
 import "dotenv/config";
 import { cors } from '@elysiajs/cors'
 import { authPlugin } from "./lib/auth-plugin";

@@ -67,13 +67,44 @@ bun run dev:frontend
 bun run dev
 ```
 
-## 🚀 Deployment
+## 🚀 Production Deployment
+
+Attention: I built this for use in my local network, so it might not be suitable for production. Use with caution.
+
+### Build for Production
+
+```bash
+# Build all components
+bun run build
+
+# Or build individually
+bun run build:backend   # Creates binary at apps/dbm-backend/bin/server
+bun run build:frontend # Creates dist files at apps/dbm-frontend/dist
+```
+
+### Start Production Services
+
+```bash
+# Start both services (backend on :3000, frontend on :5173)
+bun run start
+
+# Or start individually
+bun run start:backend   # Backend API server
+bun run start:frontend  # Frontend static file server
+```
 
 ### Using Docker
 
 ```bash
 docker-compose up -d
 ```
+
+### Production Requirements
+
+- **Database**: PostgreSQL instance running and accessible
+- **Ports**: 3000 (API), 5173 (Frontend)
+- **Environment**: Ensure `.env` files are configured in both apps
+- **Dependencies**: Run `bun install` before building
 
 ## 🤝 Contributing
 
