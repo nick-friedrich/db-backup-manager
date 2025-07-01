@@ -6,8 +6,8 @@
     "drizzle-orm": "^0.44.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "catalog:",
-    "@types/bun": "catalog:"
+    "@biomejs/biome": "^2.0.6",
+    "@types/bun": "latest"
   },
   "exports": {
     "./auth": "./src/auth_schema.ts",
