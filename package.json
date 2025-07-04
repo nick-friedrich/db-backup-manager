@@ -12,6 +12,9 @@
     "dev": "concurrently --kill-others-on-fail --names \"DBM-BE,DBM-FE\" --name-colors \"cyan,magenta\" \"bun run dev:backend\" \"bun run dev:frontend\"",
     "dev:backend": "cd apps/dbm-backend && bun run dev",
     "dev:frontend": "cd apps/dbm-frontend && bun run dev",
+    "dev:host": "concurrently --kill-others-on-fail --names \"DBM-BE,DBM-FE\" --name-colors \"cyan,magenta\" \"bun run dev:backend:host\" \"bun run dev:frontend:host\"",
+    "dev:backend:host": "cd apps/dbm-backend && bun run dev:host",
+    "dev:frontend:host": "cd apps/dbm-frontend && bun run dev:host",
     "build": "bun run build:backend && bun run build:frontend",
     "build:backend": "cd apps/dbm-backend && bun run build:server",
     "build:frontend": "cd apps/dbm-frontend && bun run build",
@@ -19,8 +22,10 @@
     "start:backend": "cd apps/dbm-backend && bun run start",
     "start:frontend": "cd apps/dbm-frontend && bun run start",
     "migrate": "bun --cwd apps/dbm-backend run drizzle-kit migrate",
-    "lint": "bun --cwd apps/dbm-backend run lint && bun --cwd apps/dbm-frontend run lint",
-    "format": "bun --cwd apps/dbm-backend run format && bun --cwd apps/dbm-frontend run format"
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
+    "prepare": "husky",
+    "clean-install": "node clean-install.js"
   },
   "keywords": [
     "postgresql",

@@ -5,6 +5,10 @@ import { account, jwks, session, user, verification } from "@packages/sqlite_sch
 import { jwt } from "better-auth/plugins"
 import { admin } from "better-auth/plugins"
 
+const trustedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
+  : ["http://localhost:5173", "http://localhost:3000"];
+
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
 		provider: "sqlite",
@@ -17,7 +21,7 @@ export const auth = betterAuth({
 		}
 	}),
 	plugins: [jwt(), admin()],
-	trustedOrigins: ["http://localhost:5173"],
+	trustedOrigins: trustedOrigins,
 	emailAndPassword: { enabled: true },
 
 });

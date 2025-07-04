@@ -67,7 +67,9 @@ export const BackupFiles = () => {
 
       // Use window.open for downloads to bypass CORS issues
       // The browser will handle the download automatically with proper headers
-      const downloadUrl = `http://localhost:3000/backups/${id}/download`;
+      const backendUrl =
+        import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+      const downloadUrl = `${backendUrl}/api/backups/${id}/download`;
       window.open(downloadUrl, "_blank");
     } catch (error) {
       console.error("Download failed:", error);

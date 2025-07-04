@@ -1,8 +1,7 @@
 import "dotenv/config";
 import { defineConfig } from "drizzle-kit";
-import { homedir } from "os";
-import { join, dirname } from "path";
-import { mkdirSync, existsSync } from "fs";
+import { dirname } from "node:path";
+import { mkdirSync, existsSync } from "node:fs";
 import { dbPath } from "./src/lib/backup.config";
 
 if (!process.env.DATABASE_URL) {

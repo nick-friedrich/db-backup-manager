@@ -2,7 +2,7 @@ import { createAuthClient } from "better-auth/react";
 import { adminClient } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
-  baseURL: "http://localhost:3000", // Your auth backend URL
+  baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:3000",
   plugins: [
     adminClient()
   ]

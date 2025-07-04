@@ -23,7 +23,8 @@ export const ImportExport = () => {
 
       // Use window.open for downloads to bypass CORS issues
       // The browser will handle the download automatically with proper headers
-      const exportUrl = `http://localhost:3000/api/import-export/export`;
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+      const exportUrl = `${backendUrl}/api/import-export/export`;
       window.open(exportUrl, "_blank");
 
       // Give some time for the download to start before clearing the loading state

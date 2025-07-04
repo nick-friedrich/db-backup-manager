@@ -228,7 +228,7 @@ export const importExportController = new Elysia({ prefix: "/import-export" })
       try {
         const stats = await stat(backupFilesDir);
         backupFilesDirExists = stats.isDirectory();
-      } catch (error) {
+      } catch (_error) {
         backupFilesDirExists = false;
       }
       console.log(`Backup files directory: ${backupFilesDir}, exists: ${backupFilesDirExists}`);

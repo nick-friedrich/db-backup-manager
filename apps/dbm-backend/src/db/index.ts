@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/libsql";
-import { dirname } from "path";
-import { mkdirSync, existsSync } from "fs";
+import { dirname } from "node:path";
+import { mkdirSync, existsSync } from "node:fs";
 import { dbPath } from "../lib/backup.config";
 
 const defaultDbPath = dbPath;
